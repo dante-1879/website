@@ -10,7 +10,6 @@ const activities = [
     description: 'Extensive hands-on training sessions focused on custom PCB Designing, advanced Soldering techniques, and hardware assembly.',
     icon: Cpu,
     image: '/hardware.jpg', 
-    // Removed md:row-span-2 to make it standard height
     className: 'md:col-span-2 bg-gradient-to-br from-primary/5 to-transparent relative',
     iconColor: 'text-primary'
   },

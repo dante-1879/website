@@ -46,9 +46,7 @@ const members = [
   { name: 'Vishal Maske', role: 'Member', exp: '1st Year' },
 ]
 
-// Separate component for individual cards so they can track their own image loading errors
 function MemberCard({ member, bgParallax }: { member: any, bgParallax: MotionValue<string> }) {
-  // If the image fails to load (404), this becomes true and the image tag is removed
   const [imgError, setImgError] = useState(false)
   
   // Format: "First_Last.jpg"
