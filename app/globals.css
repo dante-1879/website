@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: 40 20% 96%;
+    --foreground: 215 28% 17%;
+    
+    --primary: 247 84% 69%;
+    --primary-foreground: 0 0% 100%;
+    
+    --accent: 12 100% 67%;
+    --accent-foreground: 0 0% 100%;
+
+    --muted: 40 10% 90%;
+    --muted-foreground: 215 16% 47%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 215 28% 17%;
+    
+    --border: 40 15% 85%;
+    --radius: 1rem;
+  }
+
+  /* Tailwind v4 requires defining custom theme variables like this */
+  @theme {
+    --color-background: hsl(var(--background));
+    --color-foreground: hsl(var(--foreground));
+    --color-primary: hsl(var(--primary));
+    --color-accent: hsl(var(--accent));
+    --color-muted: hsl(var(--muted));
+    --color-border: hsl(var(--border));
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+}
+
+@layer components {
+  /* Replaced @apply with standard CSS to prevent v4 build errors */
+  .section {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .section {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .section {
+      padding-top: 6rem;
+      padding-bottom: 6rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .section {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  .container-custom {
+    width: 100%;
+    max-width: 80rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Standard CSS for visual components */
+  .bg-grid-pattern {
+    background-size: 40px 40px;
+    background-image: 
+      linear-gradient(to right, rgba(124, 108, 242, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(124, 108, 242, 0.05) 1px, transparent 1px);
+  }
+
+  .glass-card {
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 10px 15px -3px rgba(124, 108, 242, 0.05), 0 4px 6px -4px rgba(124, 108, 242, 0.05);
+    border-radius: 1rem;
+  }
+
+  .text-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    background-image: linear-gradient(to right, hsl(247 84% 69%), hsl(12 100% 67%));
+  }
+}
