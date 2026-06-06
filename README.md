@@ -26,4 +26,7 @@ This repository contains the source code for the official ARC website. It is bui
 
 ### Tech Stack
 * **Framework:** [Next.js](https://nextjs.org/) (App Router)
-* **Styling:** [Tailwind CSS v4](https://tailwindcss
+* **Styling:** [Tailwind CSS v4](https://tailwindcss.com/)
+* **Animations:** [Framer Motion](https://www.framer.com/motion/)
+* **Icons:** [Lucide React](https://lucide.dev/)
+* **Language:** TypeScript
