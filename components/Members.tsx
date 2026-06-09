@@ -77,9 +77,12 @@ function MemberCard({ member, bgParallax, priority = false }: MemberCardProps) {
   const [imgError, setImgError] = useState(false)
   const imagePath = `/members/${member.name.replace(/ /g, '_')}.jpg`
 
-  return (
-    <div className="relative w-[260px] h-[380px] md:w-[350px] md:h-[450px] rounded-3xl overflow-hidden group bg-white/5 border border-white/10 shrink-0 snap-center snap-always">
+  // FIX 1: Only apply native scroll snapping if we are NOT using the desktop parallax.
+  const snapClasses = !bgParallax ? 'snap-center snap-always' : ''
 
+  return (
+    <div className={`relative w-[260px] h-[380px] md:w-[350px] md:h-[450px] rounded-3xl overflow-hidden group bg-white/5 border border-white/10 shrink-0 ${snapClasses}`}>
+      
       {/* Gradient bg — parallax on desktop, static on mobile */}
       {bgParallax ? (
         <motion.div
@@ -98,8 +101,6 @@ function MemberCard({ member, bgParallax, priority = false }: MemberCardProps) {
             alt={member.name}
             fill
             priority={priority}
-            // sizes tells Next.js exactly how wide this image renders
-            // → it picks the right srcset entry and skips over-fetching
             sizes="(max-width: 767px) 260px, 350px"
             placeholder="blur"
             blurDataURL={BLUR_DATA_URL}
@@ -139,33 +140,20 @@ function MobileMembers() {
         </p>
       </div>
 
-      {/*
-        overflow-x-auto   → native horizontal scroll (hardware-accelerated on iOS/Android)
-        snap-x mandatory  → snaps to each card center
-        scrollbar-hidden  → hide scrollbar via utility (add to your globals if needed)
-        -webkit-overflow-scrolling: touch already set by Tailwind's overflow utilities
-      */}
       <div
         className="flex gap-4 px-6 overflow-x-auto snap-x snap-mandatory pb-4"
         style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
       >
-        {/* Hide webkit scrollbar */}
         <style>{`.hide-scrollbar::-webkit-scrollbar { display: none; }`}</style>
 
         {members.map((member, i) => (
           <MemberCard
             key={i}
             member={member}
-            // Eagerly load only the first 2 cards visible at mount
             priority={i < 2}
           />
         ))}
 
-        {/*
-          Trailing spacer = 50vw - half-card-width (130px).
-          This lets the last card's centre align with the viewport centre,
-          which is exactly where snap-center wants to land it.
-        */}
         <div className="shrink-0 w-[calc(50vw-130px)]" aria-hidden />
       </div>
     </section>
@@ -176,8 +164,6 @@ function MobileMembers() {
 function DesktopMembers() {
   const targetRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: targetRef })
-  // -87% ensures the last card fully enters the viewport across common screen widths.
-  // Formula: (trackWidth − viewportWidth) / trackWidth ≈ 86–87% for this member count.
   const x = useTransform(scrollYProgress, [0, 1], ['0%', '-87%'])
   const bgParallax = useTransform(scrollYProgress, [0, 1], ['-20%', '20%'])
 
@@ -209,11 +195,14 @@ function DesktopMembers() {
 // ─── Root export ──────────────────────────────────────────────────────────────
 export default function Members() {
   const isMobile = useIsMobile()
-  // Render desktop shell on SSR to avoid hydration mismatch;
-  // swap to mobile after first paint (no visible flash — both share same bg).
   const [mounted, setMounted] = useState(false)
+  
   useEffect(() => setMounted(true), [])
 
-  if (!mounted) return <DesktopMembers />
+  // FIX 2: Render a safe, standard-height placeholder on SSR to prevent violent layout shifts on mobile.
+  if (!mounted) {
+    return <section className="min-h-screen bg-foreground" />
+  }
+
   return isMobile ? <MobileMembers /> : <DesktopMembers />
 }
